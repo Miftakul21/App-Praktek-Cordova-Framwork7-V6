@@ -22,6 +22,7 @@
     <script src="js/routes.js"></script>
     <script src="js/store.js"></script>
     <script src="js/app.js"></script>
+    <script src="cordova.js"></script>
     <script src="js/jquery.js"></script>
     <script src="https://drive.crazycoding.my.id/datajs/film.js"></script>
     <script src="https://drive.crazycoding.my.id/datajs/modul.js"></script>
@@ -76,6 +77,22 @@
         }
         $("#blokdatamodul").html(hasil);
       }
+
+      function senterku() {
+        window.plugins.flashlight.available(function (isAvailable) {
+          if (isAvailable) {
+            if (window.plugins.flashlight.isSwitchedOn()) {
+              window.plugins.flashlight.switchOff();
+            } else {
+              window.plugins.flashlight.switchOn();
+            }
+          } else {
+            app.dialog.alert("LED tidak ada!", "Error");
+          }
+        });
+        console.log("center");
+      }
+      senterku();
     </script>
   </body>
 </html>
