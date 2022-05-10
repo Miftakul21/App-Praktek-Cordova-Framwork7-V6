@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#fff" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap:" />
+    <title>Praktek 6 Nich Bos</title>
+    <link rel="stylesheet" href="node_modules/framework7/framework7-bundle.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="apple-touch-icon" href="img/f7-icon-square.png" />
+    <link rel="icon" href="img/f7-icon.png" />
+    <link rel="stylesheet" href="css/custom.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="view view-main view-init safe-areas" data-master-detail-breakpoint="768" data-url="/"></div>
+    </div>
+    <script src="node_modules/framework7/framework7-bundle.min.js"></script>
+    <script src="js/routes.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="https://drive.crazycoding.my.id/datajs/film.js"></script>
+    <script src="https://drive.crazycoding.my.id/datajs/modul.js"></script>
+    <script>
+      function ambildatafilm() {
+        let hasil = "";
+        let x;
+        for (x in datafilm) {
+          let judul = datafilm[x].judul;
+          let pemain = datafilm[x].pemain;
+          let tahun = datafilm[x].tahun;
+          let rating = datafilm[x].rating;
+          let sampul = datafilm[x].cover;
+          let sinopsis = datafilm[x].sinopsis;
+
+          hasil +=
+            "<a class='col-50 text-align-center' href='' data-jd='" +
+            judul +
+            "' data-pm='" +
+            pemain +
+            "' data-th='" +
+            tahun +
+            "' data-rt='" +
+            rating +
+            "' data-sn='" +
+            sinopsis +
+            "' onclick='detailfilm(this)'><img src='" +
+            sampul +
+            "' class='besar-icon radius10' alt='.' /></a>";
+        }
+        $("#blokdatafilm").html(hasil);
+      }
+
+      function detailfilm(el) {
+        let jd = $(el).data("jd");
+        let pm = $(el).data("pn");
+        let th = $(el).data("th");
+        let rt = $(el).data("rt");
+        let sn = $(el).data("sn");
+        app.views.main.router.navigate(`/dfilm/?jd=${jd}&pm=${pm}&th=${th}&th=${th}&rt=${rt}&sn=${sn}`);
+      }
+
+      function ambildatamodul() {
+        let hasil = "";
+        let x;
+        let lokasi = "https://drive.crazycoding.my.id/datajs/modul/img/";
+        for (x in datamodul) {
+          dt = datamodul[x];
+          aa = atob(dt);
+          bb = aa.split("|");
+          hasil += "<a href='#' class='col-100 text-align-center' style='margin-bottom: 5px;'><img src='" + lokasi + bb[0] + ".jpg' alt='.' class='besar-icon radius10' /></a>";
+        }
+        $("#blokdatamodul").html(hasil);
+      }
+    </script>
+  </body>
+</html>

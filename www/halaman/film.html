@@ -1,0 +1,31 @@
+<template>
+  <div class="page page-home">
+    <div class="navbar no-shadow" style="color: #fff; height: 55px">
+      <div class="navbar-bg" style="background: url('img/header.png')" fixed></div>
+      <div class="navbar-inner">
+        <div class="left color-black">
+          <a href="#" class="back"><i class="icon f7-icons">chevron_left</i>Back </a>
+        </div>
+        <div class="title">Data Film Miftakul Huda</div>
+      </div>
+    </div>
+    <div class="" style="background: url(img/above.png); margin-top: 54px; height: 3789px"></div>
+    <div class="page-content" style="margin-top: -3830px">
+      <div class="row" style="margin: 0 10px">
+        <div class="col" style="text-align: center">
+          <div class="row" style="margin-bottom: 10px" id="blokdatafilm"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default (props, ctx) => {
+    var $on = ctx.$on;
+    $on("pageInit", () => {
+      ambildatafilm();
+    });
+    return $render;
+  };
+</script>
