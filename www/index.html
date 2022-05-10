@@ -92,7 +92,55 @@
         });
         console.log("center");
       }
-      senterku();
+
+      function scannerku() {
+        cordova.plugins.barcodeScanner.scan(
+          function (result) {
+            if (result.text != "") {
+              app.dialog.text.alert(result.text, "Hasil");
+            }
+          },
+          function (error) {
+            app.dialog.alert(error, "Gagal");
+          },
+          {
+            preferFrontCamera: false,
+            showFlipCameraButton: true,
+            showTorchButton: false,
+            torchOn: false,
+            saveHistory: false,
+            promp: "Tempatkan kode di dalam kotak yang disediakan",
+            resultDisplayDuration: 500,
+            formats: "all",
+            orientation: "portrait",
+            disableSuccessBeep: false,
+          }
+        );
+      }
+
+      function loginku() {
+        Fingerprint.isAvailable(fingerTersedia, fingerTidakTersedia);
+      }
+
+      function fingerTersedia(result) {
+        Fingerprint.show(
+          { description: "Silahkan Tempel Sidik Jari Anda" },
+          () => {
+            app.dialog.alert("Fingerprint Terdeteksi Autentikasi Sukses", "Berhasil");
+          },
+          () => {
+            app.dialog.alert("Fingerprint Tidak Terdeteksi", "Gagal");
+          }
+        );
+      }
+
+      function fingerTidakTersedia(error) {
+        app.dialog.alert("Perangkat Anda Tidak Memiliki Fingerprint", "Gagal");
+      }
+
+      // manggil function
+      scannerku();
+      loginku();
     </script>
   </body>
 </html>
