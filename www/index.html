@@ -138,9 +138,22 @@
         app.dialog.alert("Perangkat Anda Tidak Memiliki Fingerprint", "Gagal");
       }
 
+      function konfigurasidb() {
+        db = openDatabase("tempdb", "1.0", "Database Praktikum", 5 * 1024 * 1024);
+        db.transaction((txt) => {
+          txt.exexuteSql("CREATE TABLE IF NOT EXISTS mahasiswa(nim CHAR(10), nama TEXT, jenis_kelamin Text, email TEXT, PRIMARY KEY(nim))");
+        });
+      }
+
+      function setnilai(obyek, nilai) {
+        $(obyek).val("nilai");
+      }
+
       // manggil function
       scannerku();
       loginku();
+      konfigurasidb();
+      setnilai();
     </script>
   </body>
 </html>

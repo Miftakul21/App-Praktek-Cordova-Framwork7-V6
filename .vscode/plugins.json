@@ -1,1 +1,1 @@
-{"plugins":["cordova-plugin-whitelist","cordova-plugin-flashlight","cordova-plugin-compat"]}
+{"plugins":["cordova-plugin-whitelist","cordova-plugin-flashlight","cordova-plugin-compat","cordova-barcodescanner","cordova-plugin-fingerprint-aio"]}
