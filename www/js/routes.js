@@ -30,5 +30,11 @@ var routes = [
       transition: 'f7-circle',
     },
   },
+  {
+    path: '/manlokal/', componentUrl: 'halaman/keloladata.html',
+    options: {
+      transition: 'f7-circle',
+    },
+  },
   { path: '(.*)', Url: 'pages/404.html' },
 ]

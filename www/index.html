@@ -139,21 +139,188 @@
       }
 
       function konfigurasidb() {
-        db = openDatabase("tempdb", "1.0", "Database Praktikum", 5 * 1024 * 1024);
-        db.transaction((txt) => {
-          txt.exexuteSql("CREATE TABLE IF NOT EXISTS mahasiswa(nim CHAR(10), nama TEXT, jenis_kelamin Text, email TEXT, PRIMARY KEY(nim))");
+        db = openDatabase("tempdb", "1.0", "Database Praktikum", 5 * 1024 * 024);
+        db.transaction((tx) => {
+          tx.executeSql("CREATE TABLE IF NOT EXISTS mahasiswa (nim CHAR(10), nama TEXT, jenis_kelamin TEXT, email TEXT, PRIMARY KEY(nim))");
         });
+        console.log("Database");
       }
 
       function setnilai(obyek, nilai) {
-        $(obyek).val("nilai");
+        $(obyek).val(nilai);
       }
 
-      // manggil function
+      function tambah_mahasiswa() {
+        let nim = $("#txtnim").val();
+        let nama = $("#txtnama").val();
+        let jenis_kelamin = $("#txtjk").val();
+        let email = $("#txtemail").val();
+
+        if (nim == "" || nama == "" || jenis_kelamin == "" || email == "") {
+          app.dialog.alert("Isian Masih Kosong", "Error");
+          return;
+        }
+
+        db.transaction(function (tx) {
+          tx.executeSql(
+            "INSERT INTO mahasiswa VALUES(?,?,?,?)",
+            [nim, nama, jenis_kelamin, email],
+            function (tx) {
+              app.dialog.alert("Data Mahasiswa Berhasil Di Tambahkan", "Berhasil");
+              kosong_mahasiswa();
+            },
+            function () {
+              app.dialog.alert("Data Mahasiswa Gagal Di Tambahkan, Cek Isian Anda", "Gagal");
+            }
+          );
+        });
+      }
+
+      function update_mahasiswa() {
+        let nim = $("#txtnim").html();
+        let nama = $("#txtnama").val();
+        let jenis_kelamin = $("#txtjk").val();
+        let email = $("#txtemail").val();
+
+        if (nim == "" || nama == "" || jenis_kelamin == "" || email == "") {
+          app.dialog.alert("Isian Masih Kosong", "Error");
+          return;
+        }
+
+        db.transaction(function (tx) {
+          tx.executeSql(
+            "UPDATE mahasiswa SET nama=?, jenis_kelamin=?, email=? WHERE nim=?",
+            [nama, jenis_kelamin, email, nim],
+            function (tx) {
+              app.dialog.alert("Data Mahasiswa Berhasil Di Update", "Berhasil");
+              app.views.main.router.back();
+            },
+            function () {
+              app.dialog.alert("Data Mahasiswa Gagal Di Update, Cek Isian Anda", "Gagal");
+            }
+          );
+        });
+      }
+
+      function delete_mahasiswa() {
+        let nim = $("#txtnim").html();
+
+        if (nim == "") {
+          app.dialog.alert("NIM Tidak Ada", "Error");
+          return;
+        }
+
+        app.dialog.confirm("Anda Yakin Ingin Hapus?", "Konfirmasi", () => {
+          db.transaction(function (tx) {
+            tx.executeSql(
+              "DELETE FROM mahasiswa WHERE nim=?",
+              [nim],
+              (tx) => {
+                app.dialog.alert("Data Mahasiswa Berhasil Di Hapus", "Berhasil");
+                app.views.main.router.back();
+              },
+              () => {
+                app.dialog.alert("Data Mahasiswa Gagal Di Hapus, Cek Isian Anda", "Gagal");
+              }
+            );
+          });
+        });
+      }
+
+      function kosong_mahasiswa() {
+        $("#txtnim").val("");
+        $("#txtnama").val("");
+        $("#txtjk").val("");
+        $("#txtemail").val("");
+      }
+
+      function ambildatamahasiswa() {
+        db.transaction((tx) => {
+          tx.executeSql(
+            "SELECT * FROM mahasiswa",
+            [],
+            (tx, results) => {
+              jumdata = results.rows.length;
+              if (jumdata > 0) {
+                let hasil = "";
+                for (let i = 0; i < jumdata; i++) {
+                  let nim = results.rows.item(i).nim;
+                  let nama = results.rows.item(i).nama;
+                  let jk = results.rows.item(i).jenis_kelamin;
+                  let email = results.rows.item(i).email;
+
+                  // hasil +=
+                  //   '<div class="card card-outline" style="margin: 0 10px 10px 10px; border-radius: 10px;"><div class="card-content card-content-padding"><div class="row mb-10"><div class="col-20" style="font-size: 25px; text-align: center;"><img src="img/user.png" style="margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; text-align: center; width: 100%;" /></div><div class="col-80" style="font-size: 17px;" /><b>' +
+                  //   nama +
+                  //   "</b><br>" +
+                  //   email +
+                  //   "</div></div></div></div>";
+                  hasil +=
+                    '<div class="card card-outline" data-nim="' +
+                    nim +
+                    '" onclick="kelolamahasiswa(this)" style="margin: 0 10px 10px 10px; border-radius: 10px;"><div class="card-content card-content-padding"><div class="row mb-10"><div class="col-20" style="font-size: 25px; text-align: center;"><img src="img/user.png" style="margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; text-align: center; width: 100%;" /></div><div class="col-80" style="font-size: 17px;" /><b>' +
+                    nama +
+                    "</b><br>" +
+                    email +
+                    "</div></div></div></div>";
+                }
+                $("#blokdatamahasiswa").html(hasil + "<br><br><br>");
+              } else {
+                app.dialog.alert("Data Mahasiswa Tidak Ditemukan", "Kosong");
+              }
+            },
+            () => {
+              app.dialog.alert("SQL Gagal Dijalankan, Cek SQL-nya", "Error");
+            }
+          );
+        });
+      }
+
+      function kelolamahasiswa(el) {
+        let nim = $(el).data("nim");
+        if (nim == "") {
+          app.dialog.alert("NIM mahasiswa tidak ada", "Error");
+        }
+        db.transaction((tx) => {
+          tx.executeSql(
+            "SELECT * FROM mahasiswa WHERE nim = '" + nim + "'",
+            [],
+            (tx, results) => {
+              jumdata = results.rows.length;
+              if (jumdata > 0) {
+                let hasil = "";
+                for (let i = 0; i < jumdata; i++) {
+                  let nim = results.rows.item(i).nim;
+                  let nama = results.rows.item(i).nama;
+                  let jk = results.rows.item(i).jenis_kelamin;
+                  let email = results.rows.item(i).email;
+
+                  sessionStorage.setItem("nim_filter", nim);
+                  sessionStorage.setItem("nama_filter", nama);
+                  sessionStorage.setItem("jk_filter", jk);
+                  sessionStorage.setItem("email_filter", email);
+                }
+                app.views.main.router.navigate("/manlokal/");
+              } else {
+                app.dialog.alert("Data Mahasiswa Tidak Ditemukan", "Kosong");
+              }
+            },
+            () => {
+              app.dialog.alert("SQL Gagal Dijalankan, Cek SQL-nya", "Error");
+            }
+          );
+        });
+      }
+
+      // setnilai(obyek, nilai);
+      konfigurasidb();
+      // tambah_mahasiswa();
+      // update_mahasiswa();
+      // delete_mahasiswa();
+      // kosong_mahasiswa();
+      kelolamahasiswa();
       scannerku();
       loginku();
-      konfigurasidb();
-      setnilai();
     </script>
   </body>
 </html>
