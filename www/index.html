@@ -242,23 +242,17 @@
             (tx, results) => {
               jumdata = results.rows.length;
               if (jumdata > 0) {
-                let hasil = "";
+                var hasil = "";
                 for (let i = 0; i < jumdata; i++) {
                   let nim = results.rows.item(i).nim;
                   let nama = results.rows.item(i).nama;
                   let jk = results.rows.item(i).jenis_kelamin;
                   let email = results.rows.item(i).email;
 
-                  // hasil +=
-                  //   '<div class="card card-outline" style="margin: 0 10px 10px 10px; border-radius: 10px;"><div class="card-content card-content-padding"><div class="row mb-10"><div class="col-20" style="font-size: 25px; text-align: center;"><img src="img/user.png" style="margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; text-align: center; width: 100%;" /></div><div class="col-80" style="font-size: 17px;" /><b>' +
-                  //   nama +
-                  //   "</b><br>" +
-                  //   email +
-                  //   "</div></div></div></div>";
                   hasil +=
-                    '<div class="card card-outline" data-nim="' +
+                    '<div class="card card-outline" style="margin: 0px 10px 10px 10px; border-radius: 15px;" data-nim="' +
                     nim +
-                    '" onclick="kelolamahasiswa(this)" style="margin: 0 10px 10px 10px; border-radius: 10px;"><div class="card-content card-content-padding"><div class="row mb-10"><div class="col-20" style="font-size: 25px; text-align: center;"><img src="img/user.png" style="margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; text-align: center; width: 100%;" /></div><div class="col-80" style="font-size: 17px;" /><b>' +
+                    '" onclick="kelolamahasiswa(this)"><div class="card-content card-content-padding"><div class="row mb-10"><div class="col-20" style="font-size:25px; text-align: center;"><img src="img/user.png" style="display: block;margin-bottom: 0px; margin-left: auto; margin-right: auto; text-align: center; width: 100%;" alt="."></div><div class="col-80" style="font-size: 17px;"><b>' +
                     nama +
                     "</b><br>" +
                     email +
@@ -269,7 +263,7 @@
                 app.dialog.alert("Data Mahasiswa Tidak Ditemukan", "Kosong");
               }
             },
-            () => {
+            function () {
               app.dialog.alert("SQL Gagal Dijalankan, Cek SQL-nya", "Error");
             }
           );
@@ -277,24 +271,23 @@
       }
 
       function kelolamahasiswa(el) {
-        let nim = $(el).data("nim");
+        var nim = $(el).data("nim");
         if (nim == "") {
           app.dialog.alert("NIM mahasiswa tidak ada", "Error");
         }
-        db.transaction((tx) => {
+
+        db.transaction(function (tx) {
           tx.executeSql(
             "SELECT * FROM mahasiswa WHERE nim = '" + nim + "'",
             [],
-            (tx, results) => {
-              jumdata = results.rows.length;
-              if (jumdata > 0) {
-                let hasil = "";
-                for (let i = 0; i < jumdata; i++) {
+            function (tx, results) {
+              jmldata = results.rows.length;
+              if (jmldata > 0) {
+                for (let i = 0; i < jmldata; i++) {
                   let nim = results.rows.item(i).nim;
                   let nama = results.rows.item(i).nama;
                   let jk = results.rows.item(i).jenis_kelamin;
                   let email = results.rows.item(i).email;
-
                   sessionStorage.setItem("nim_filter", nim);
                   sessionStorage.setItem("nama_filter", nama);
                   sessionStorage.setItem("jk_filter", jk);
@@ -302,23 +295,54 @@
                 }
                 app.views.main.router.navigate("/manlokal/");
               } else {
-                app.dialog.alert("Data Mahasiswa Tidak Ditemukan", "Kosong");
+                app.dialog.alert("Data mahasiswa tida ada", "Kosong");
               }
             },
-            () => {
-              app.dialog.alert("SQL Gagal Dijalankan, Cek SQL-nya", "Error");
+            function () {
+              app.dialog.alert("SQL gagal ada kesalahan, coba cek lagi", "Error");
             }
           );
         });
       }
 
-      // setnilai(obyek, nilai);
+      function apipublic() {
+        let th = $("#txtth").val();
+        let bln = $("#cbobln").val();
+
+        if (th == "" || bln == "") {
+          app.dialog.alert("Isian Pencarian Harus Lengkap", "Cari Gagal");
+        }
+        app.dialog.preloader("Akses Data...");
+        $.getJSON("https://miftahuda123.000webhostapp.com/coba_api/api2.php?data=penjualan&tahun=" + th + "&bulan=" + bln, function (result) {
+          app.dialog.close();
+          if (result.length != 0) {
+            let dt = "";
+            let tmbh = "";
+
+            $.each(result, function (i, kolom) {
+              let tgl = kolom.orderDate;
+              let x = tgl.split("-");
+              let file = x[2] + ".jpg";
+              dt += "<a href='javascript:void(0)' class='col-25 text-align-center'style='margin-bottom: 10px;'><img src='img/" + file + "' class='besar-icon radius10' /></a>";
+            });
+            if (result.length % 4 == 1) {
+              tmbh += '<a href="javascript:void(0)" class="col-25 text-align-center"></a><a href="javascript:void(0)" class="col-25 text-align-center"></a><a href="javascript:void(0)" class="col-25 text-align-center"></a>';
+            } else if (result.length % 4 == 2) {
+              tmbh += '<a href="javascript:void(0)" class="col-25 text-align-center"></a><a href="javascript:void(0)" class="col-25 text-align-center"></a>';
+            } else if (result.length % 4 == 3) {
+              tmbh += '<a href="javascript:void(0)" class="col-25 text-align-center"></a>';
+            } else {
+              tmbh += "";
+            }
+            $("#blokdataapi").html(dt + tmbh);
+          } else {
+            app.dialog.alert("Data Tidak Ditemukan", "Kosong");
+            $("#blokdataapi").html("");
+          }
+        });
+      }
+
       konfigurasidb();
-      // tambah_mahasiswa();
-      // update_mahasiswa();
-      // delete_mahasiswa();
-      // kosong_mahasiswa();
-      kelolamahasiswa();
       scannerku();
       loginku();
     </script>

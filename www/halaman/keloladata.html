@@ -23,7 +23,7 @@
                 </div>
                 <div class="item-inner">
                   <div class="item-title item-label">NIM*</div>
-                  <div class="item-input-wrap"><input type="number" id="txtnim" placeholder="ex: 4120055" /></div>
+                  <div class="item-input-wrap"><input type="number" id="txtnime" placeholder="ex: 4120055" /></div>
                 </div>
               </div>
               <div class="item-content item-input">
@@ -32,7 +32,7 @@
                 </div>
                 <div class="item-inner">
                   <div class="item-title item-label">Nama*</div>
-                  <div class="item-input-wrap"><input type="text" id="txtnama" placeholder="ex: Budi Raharjo" /></div>
+                  <div class="item-input-wrap"><input type="text" id="txtnamae" placeholder="ex: Budi Raharjo" /></div>
                 </div>
               </div>
               <div class="item-content item-input">
@@ -41,13 +41,13 @@
                 </div>
                 <div class="item-inner">
                   <div class="item-title item-label">Jenis Kelamin*</div>
-                  <div class="item-input-wrap"><input type="text" id="txtjk" placeholder="ex: Laki - Laki" readonly /></div>
+                  <div class="item-input-wrap"><input type="text" id="txtjke" placeholder="ex: Laki - Laki" readonly /></div>
                 </div>
                 <div class="col-10">
                   <div class="item-inner">
                     <!-- <div class="item-title item-label"></div> -->
                     <div class="item-input-wrap">
-                      <button type="button" class="button button-fill color-blue sheet-open" data-sheet="#sheet-jk">
+                      <button type="button" class="button button-fill color-blue sheet-open" data-sheet="#sheet-jke">
                         <i class="icon f7-icons">search</i>
                       </button>
                     </div>
@@ -60,19 +60,19 @@
                 </div>
                 <div class="item-inner">
                   <div class="item-title item-label">Email*</div>
-                  <div class="item-input-wrap"><input type="email" id="txtemail" placeholder="ex: abah@gmail.com" /></div>
+                  <div class="item-input-wrap"><input type="email" id="txtemaile" placeholder="ex: abah@gmail.com" /></div>
                 </div>
               </div>
             </div>
             <div class="item-content item-input row">
               <button type="submit" class="col button button-fill color-green" @click="${() => update_mahasiswa()}">Update</button>
-              <button type="submit" class="col button button-fill color-red" @click="${() => delete_mahasiswa">Delete</button>
+              <button type="submit" class="col button button-fill color-red" @click="${() => delete_mahasiswa()">Delete</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="sheet-modal demo-sheet-swipe-to-close" style="height: auto" id="sheet-jk">
+    <div class="sheet-modal demo-sheet-swipe-to-close" style="height: auto" id="sheet-jke">
       <div class="sheet-modal-inner">
         <div class="swipe-handler"></div>
         <div class="page-content">
@@ -80,14 +80,14 @@
           <div class="list">
             <ul>
               <li>
-                <a href="#" class="item-link item-content sheet-close" @click="${() => setnilai('#txtjk','Laki - Laki')}">
+                <a href="#" class="item-link item-content sheet-close" @click="${() => setnilai('#txtjke','Laki - Laki')}">
                   <div class="item-inner">
                     <div class="item-title">Laki - Laki</div>
                   </div>
                 </a>
               </li>
               <li>
-                <a href="#" class="item-link item-content sheet-close" @click="${() => setnilai('#txtjk','Perempuan')}">
+                <a href="#" class="item-link item-content sheet-close" @click="${() => setnilai('#txtjke','Perempuan')}">
                   <div class="item-inner">
                     <div class="item-title">Perempuan</div>
                   </div>
@@ -105,10 +105,10 @@
   export default (props, ctx) => {
     var $on = ctx.$on;
     $on("pageInint", () => {
-      $("#txtnim").html(sessionStorage.nim_filter);
-      $("#txtnama").html(sessionStorage.nama_filter);
-      $("#txtjk").html(sessionStorage.jk_filter);
-      $("#txtemail").html(sessionStorage.email_filter);
+      $("#txtnime").html(sessionStorage.nim_filter);
+      $("#txtnamae").val(sessionStorage.nama_filter);
+      $("#txtjke").val(sessionStorage.jk_filter);
+      $("#txtemaile").val(sessionStorage.email_filter);
     });
     return $render;
   };
