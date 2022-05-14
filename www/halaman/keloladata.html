@@ -10,63 +10,65 @@
       </div>
     </div>
     <div class="" style="background: url(img/above.png); margin-top: 54px; height: 3789px"></div>
-    <div class="page-content" style="margin-top: -3850px">
-      <div class="card-content card-content-padding">
-        <div class="row">
-          <div class="col-100">
-            <font style="font-size: 20px"><b>Form Mahasiswa</b></font
-            ><br />
-            <div class="list">
-              <div class="item-content item-input">
-                <div class="col-15">
-                  <div class="item-media"><i class="icon f7-icons">qrcode</i></div>
-                </div>
-                <div class="item-inner">
-                  <div class="item-title item-label">NIM*</div>
-                  <div class="item-input-wrap"><input type="number" id="txtnime" placeholder="ex: 4120055" /></div>
-                </div>
-              </div>
-              <div class="item-content item-input">
-                <div class="col-15">
-                  <div class="item-media"><i class="icon f7-icons">person_crop_circle_fill</i></div>
-                </div>
-                <div class="item-inner">
-                  <div class="item-title item-label">Nama*</div>
-                  <div class="item-input-wrap"><input type="text" id="txtnamae" placeholder="ex: Budi Raharjo" /></div>
-                </div>
-              </div>
-              <div class="item-content item-input">
-                <div class="col-15">
-                  <div class="item-media"><i class="icon f7-icons">doc_person</i></div>
-                </div>
-                <div class="item-inner">
-                  <div class="item-title item-label">Jenis Kelamin*</div>
-                  <div class="item-input-wrap"><input type="text" id="txtjke" placeholder="ex: Laki - Laki" readonly /></div>
-                </div>
-                <div class="col-10">
+    <div class="page-content" style="margin-top: -3830px">
+      <div class="card card-outline" style="margin: 0 10px 10px 10px">
+        <div class="card-content card-content-padding">
+          <div class="row">
+            <div class="col-100">
+              <font style="font-size: 20px"><b>Form Mahasiswa</b></font
+              ><br />
+              <div class="list">
+                <div class="item-content item-input">
+                  <div class="col-15">
+                    <div class="item-media"><i class="icon f7-icons">qrcode</i></div>
+                  </div>
                   <div class="item-inner">
-                    <!-- <div class="item-title item-label"></div> -->
-                    <div class="item-input-wrap">
-                      <button type="button" class="button button-fill color-blue sheet-open" data-sheet="#sheet-jke">
-                        <i class="icon f7-icons">search</i>
-                      </button>
+                    <div class="item-title item-label">NIM*</div>
+                    <div class="item-input-wrap"><input type="number" id="txtnime" placeholder="ex: 4120055" /></div>
+                  </div>
+                </div>
+                <div class="item-content item-input">
+                  <div class="col-15">
+                    <div class="item-media"><i class="icon f7-icons">person_crop_circle_fill</i></div>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title item-label">Nama*</div>
+                    <div class="item-input-wrap"><input type="text" id="txtnamae" placeholder="ex: Budi Raharjo" /></div>
+                  </div>
+                </div>
+                <div class="item-content item-input">
+                  <div class="col-15">
+                    <div class="item-media"><i class="icon f7-icons">doc_person</i></div>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title item-label">Jenis Kelamin*</div>
+                    <div class="item-input-wrap"><input type="text" id="txtjke" placeholder="ex: Laki - Laki" readonly /></div>
+                  </div>
+                  <div class="col-10">
+                    <div class="item-inner">
+                      <!-- <div class="item-title item-label"></div> -->
+                      <div class="item-input-wrap">
+                        <button type="button" class="button button-fill color-blue sheet-open" data-sheet="#sheet-jke">
+                          <i class="icon f7-icons">search</i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="item-content item-input">
-                <div class="col-15">
-                  <div class="item-media"><i class="icon f7-icons">at</i></div>
+                <div class="item-content item-input">
+                  <div class="col-15">
+                    <div class="item-media"><i class="icon f7-icons">at</i></div>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title item-label">Email*</div>
+                    <div class="item-input-wrap"><input type="email" id="txtemaile" placeholder="ex: abah@gmail.com" /></div>
+                  </div>
                 </div>
-                <div class="item-inner">
-                  <div class="item-title item-label">Email*</div>
-                  <div class="item-input-wrap"><input type="email" id="txtemaile" placeholder="ex: abah@gmail.com" /></div>
-                </div>
               </div>
-            </div>
-            <div class="item-content item-input row">
-              <button type="submit" class="col button button-fill color-green" @click="${() => update_mahasiswa()}">Update</button>
-              <button type="submit" class="col button button-fill color-red" @click="${() => delete_mahasiswa()">Delete</button>
+              <div class="item-content item-input row">
+                <button type="submit" class="col button button-fill color-green" @click="${() => update_mahasiswa()}">Update</button>
+                <button type="submit" class="col button button-fill color-red" @click="${() => delete_mahasiswa()}">Delete</button>
+              </div>
             </div>
           </div>
         </div>
@@ -104,7 +106,7 @@
 <script>
   export default (props, ctx) => {
     var $on = ctx.$on;
-    $on("pageInint", () => {
+    $on("pageInit", () => {
       $("#txtnime").html(sessionStorage.nim_filter);
       $("#txtnamae").val(sessionStorage.nama_filter);
       $("#txtjke").val(sessionStorage.jk_filter);

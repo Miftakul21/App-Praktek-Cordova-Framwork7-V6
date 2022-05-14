@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#fff" />
     <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap:" />
     <title>Praktek 6 Nich Bos</title>
-    <link rel="stylesheet" href="node_modules/framework7/framework7-bundle.min.css" />
+    <link rel="stylesheet" href="framework7/framework7-bundle.min.css" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="apple-touch-icon" href="img/f7-icon-square.png" />
     <link rel="icon" href="img/f7-icon.png" />
@@ -18,7 +18,7 @@
     <div id="app">
       <div class="view view-main view-init safe-areas" data-master-detail-breakpoint="768" data-url="/"></div>
     </div>
-    <script src="node_modules/framework7/framework7-bundle.min.js"></script>
+    <script src="framework7/framework7-bundle.min.js"></script>
     <script src="js/routes.js"></script>
     <script src="js/store.js"></script>
     <script src="js/app.js"></script>
@@ -177,16 +177,15 @@
       }
 
       function update_mahasiswa() {
-        let nim = $("#txtnim").html();
-        let nama = $("#txtnama").val();
-        let jenis_kelamin = $("#txtjk").val();
-        let email = $("#txtemail").val();
+        let nim = $("#txtnime").html();
+        let nama = $("#txtnamae").val();
+        let jenis_kelamin = $("#txtjke").val();
+        let email = $("#txtemaile").val();
 
         if (nim == "" || nama == "" || jenis_kelamin == "" || email == "") {
           app.dialog.alert("Isian Masih Kosong", "Error");
           return;
         }
-
         db.transaction(function (tx) {
           tx.executeSql(
             "UPDATE mahasiswa SET nama=?, jenis_kelamin=?, email=? WHERE nim=?",
@@ -203,7 +202,7 @@
       }
 
       function delete_mahasiswa() {
-        let nim = $("#txtnim").html();
+        let nim = $("#txtnime").html();
 
         if (nim == "") {
           app.dialog.alert("NIM Tidak Ada", "Error");
@@ -276,6 +275,10 @@
           app.dialog.alert("NIM mahasiswa tidak ada", "Error");
         }
 
+        console.log(nim);
+
+        app.views.main.router.navigate("/manlokal/");
+
         db.transaction(function (tx) {
           tx.executeSql(
             "SELECT * FROM mahasiswa WHERE nim = '" + nim + "'",
@@ -339,6 +342,48 @@
             app.dialog.alert("Data Tidak Ditemukan", "Kosong");
             $("#blokdataapi").html("");
           }
+        });
+      }
+
+      function apiprivate() {
+        app.dialog.preloader("Akses Data...");
+        $.ajax({
+          url: "https://miftahuda123.000webhostapp.com/coba_api/api3.php",
+          method: "POST",
+          chache: "false",
+          success: (y) => {
+            app.dialog.close();
+            var x = atob(y);
+            var dtbesar = x.split("##");
+            if (dtbesar.length != 0) {
+              $("#blokdataapi").html("");
+              for (z in dtbesar) {
+                let dtkecil = dtbesar[z];
+                let dt = dtkecil.split("|");
+                let idkaryawan = dt[0];
+                let namadepan = dt[1];
+                let namabelakang = dt[2];
+                let email = dt[3];
+                let nama = namadepan + " " + namabelakang;
+                $("#blokdataapi").append(
+                  '<div class="card card-outline" style="margin: 0px 10px 10px 10px; border-radius: 15px;"><div class="card-content card-content-padding"><div class="row mb-10"><div class="col-20" style="font-size:25px; text-align: center;"><img src="img/user.png" style="display: block;margin-bottom: 0px; margin-left: auto; margin-right: auto; text-align: center; width: 100%;" alt="."></div><div class="col-80" style="font-size: 17px;"><b>' +
+                    nama +
+                    "</b><br>" +
+                    email +
+                    "</div></div></div></div>"
+                );
+              }
+              $("#blokdataapi").append("<br><br><br>");
+            } else {
+              app.dialog.close();
+              app.dialog.alert("Data Tidak ditemukan", "Kosong");
+              $("#blokdataapi").html("");
+            }
+          },
+          error: () => {
+            app.dialog.alert("Api tidak terhubung", "gagal");
+            $("#blokdataapi").html("");
+          },
         });
       }
 

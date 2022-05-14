@@ -42,5 +42,11 @@ var routes = [
       transition: 'f7-circle',
     },
   },
+  {
+    path: '/apiprivate/', componentUrl: 'halaman/apiprivate.html',
+    options: {
+      transition: 'f7-circle',
+    },
+  },
   { path: '(.*)', Url: 'pages/404.html' },
 ]
