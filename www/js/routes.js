@@ -48,5 +48,23 @@ var routes = [
       transition: 'f7-circle',
     },
   },
+  {
+    path: '/dataapi/', componentUrl: 'halaman/dataapi.html',
+    options: {
+      transition: 'f7-circle',
+    },
+  },
+  {
+    path: '/keloladataapi/', componentUrl: 'halaman/keloladataapi.html',
+    options: {
+      transition: 'f7-circle',
+    },
+  },
+  {
+    path: '/dataapikelola/', componentUrl: 'halaman/dataapikelola.html',
+    options: {
+      transition: 'f7-circle',
+    },
+  },
   { path: '(.*)', Url: 'pages/404.html' },
 ]

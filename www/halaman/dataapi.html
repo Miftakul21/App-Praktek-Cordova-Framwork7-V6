@@ -1,0 +1,28 @@
+<template>
+  <div class="page page-home">
+    <div class="navbar no-shadow" style="color: #fff; height: 55px">
+      <div class="navbar-bg" style="background: url('img/header.png')" fixed></div>
+      <div class="navbar-inner">
+        <div class="left color-black">
+          <a href="#" class="back"><i class="icon f7-icons">chevron_left</i>Back</a>
+        </div>
+        <div class="title sliding">Daftar Mahasiswa</div>
+        <div class="right color-white">
+          <a href="/keloladataapi/" class=""><i class="icon f7-icons">plus</i></a>
+        </div>
+      </div>
+    </div>
+    <div class="" style="background: url(img/above.png); margin-top: 54px; height: 3789px"></div>
+    <div class="page-content" style="margin-top: -3830px" id="blokdatamahasiswa"></div>
+  </div>
+</template>
+
+<script>
+  export default (props, ctx) => {
+    var $on = ctx.$on;
+    $on("pageAfterIn", () => {
+      bacadataapi();
+    });
+    return $render;
+  };
+</script>

@@ -107,7 +107,7 @@
   export default (props, ctx) => {
     var $on = ctx.$on;
     $on("pageInit", () => {
-      $("#txtnime").html(sessionStorage.nim_filter);
+      $("#txtnime").val(sessionStorage.nim_filter);
       $("#txtnamae").val(sessionStorage.nama_filter);
       $("#txtjke").val(sessionStorage.jk_filter);
       $("#txtemaile").val(sessionStorage.email_filter);

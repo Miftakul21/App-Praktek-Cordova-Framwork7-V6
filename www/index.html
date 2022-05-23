@@ -150,6 +150,41 @@
         $(obyek).val(nilai);
       }
 
+      function kelolamahasiswa(el) {
+        var nim = $(el).data("nim");
+        if (nim == "") {
+          app.dialog.alert("NIM mahasiswa tidak ada", "Error");
+        }
+        console.log(nim);
+        db.transaction(function (tx) {
+          tx.executeSql(
+            "SELECT * FROM mahasiswa WHERE nim = '" + nim + "'",
+            [],
+            function (tx, results) {
+              jmldata = results.rows.length;
+              if (jmldata > 0) {
+                for (let i = 0; i < jmldata; i++) {
+                  let nim = results.rows.item(i).nim;
+                  let nama = results.rows.item(i).nama;
+                  let jk = results.rows.item(i).jenis_kelamin;
+                  let email = results.rows.item(i).email;
+                  sessionStorage.setItem("nim_filter", nim);
+                  sessionStorage.setItem("nama_filter", nama);
+                  sessionStorage.setItem("jk_filter", jk);
+                  sessionStorage.setItem("email_filter", email);
+                }
+                app.views.main.router.navigate("/manlokal/");
+              } else {
+                app.dialog.alert("Data mahasiswa tida ada", "Kosong");
+              }
+            },
+            function () {
+              app.dialog.alert("SQL gagal ada kesalahan, coba cek lagi", "Error");
+            }
+          );
+        });
+      }
+
       function tambah_mahasiswa() {
         let nim = $("#txtnim").val();
         let nama = $("#txtnama").val();
@@ -177,7 +212,7 @@
       }
 
       function update_mahasiswa() {
-        let nim = $("#txtnime").html();
+        let nim = $("#txtnime").val();
         let nama = $("#txtnamae").val();
         let jenis_kelamin = $("#txtjke").val();
         let email = $("#txtemaile").val();
@@ -202,7 +237,7 @@
       }
 
       function delete_mahasiswa() {
-        let nim = $("#txtnime").html();
+        let nim = $("#txtnime").val();
 
         if (nim == "") {
           app.dialog.alert("NIM Tidak Ada", "Error");
@@ -264,45 +299,6 @@
             },
             function () {
               app.dialog.alert("SQL Gagal Dijalankan, Cek SQL-nya", "Error");
-            }
-          );
-        });
-      }
-
-      function kelolamahasiswa(el) {
-        var nim = $(el).data("nim");
-        if (nim == "") {
-          app.dialog.alert("NIM mahasiswa tidak ada", "Error");
-        }
-
-        console.log(nim);
-
-        app.views.main.router.navigate("/manlokal/");
-
-        db.transaction(function (tx) {
-          tx.executeSql(
-            "SELECT * FROM mahasiswa WHERE nim = '" + nim + "'",
-            [],
-            function (tx, results) {
-              jmldata = results.rows.length;
-              if (jmldata > 0) {
-                for (let i = 0; i < jmldata; i++) {
-                  let nim = results.rows.item(i).nim;
-                  let nama = results.rows.item(i).nama;
-                  let jk = results.rows.item(i).jenis_kelamin;
-                  let email = results.rows.item(i).email;
-                  sessionStorage.setItem("nim_filter", nim);
-                  sessionStorage.setItem("nama_filter", nama);
-                  sessionStorage.setItem("jk_filter", jk);
-                  sessionStorage.setItem("email_filter", email);
-                }
-                app.views.main.router.navigate("/manlokal/");
-              } else {
-                app.dialog.alert("Data mahasiswa tida ada", "Kosong");
-              }
-            },
-            function () {
-              app.dialog.alert("SQL gagal ada kesalahan, coba cek lagi", "Error");
             }
           );
         });
@@ -387,6 +383,187 @@
         });
       }
 
+      function bacadataapi() {
+        app.dialog.progress("Akses Data...");
+        let url = "https://miftahuda123.000webhostapp.com/api_native2/api.php";
+
+        $.getJSON(url, { fungsi: "bacadata" }, (result) => {
+          app.dialog.close();
+          if (result != 0) {
+            let dt = "";
+            $.each(result, (i, data) => {
+              let nim = data.nim;
+              let nama = data.nama;
+              let email = data.email;
+              let kelas = data.kelas;
+
+              dt +=
+                '<div class="card card-outline" style="margin: 0px 10px 10px 10px; border-radius: 15px;" data-nim="' +
+                nim +
+                '" onclick="keloladataapi(this)"><div class="card-content card-content-padding"><div class="row mb-10"><div class="col-20" style="font-size:25px; text-align: center;"><img src="img/user.png" style="display: block;margin-bottom: 0px; margin-left: auto; margin-right: auto; text-align: center; width: 100%;" alt="."></div><div class="col-80" style="font-size: 17px;"><b>' +
+                nama +
+                "</b><br>" +
+                email +
+                "</div></div></div></div>";
+            });
+            $("#blokdatamahasiswa").html(dt + "<br><br><br>");
+          } else {
+            app.dialog.alert("Data mahasiswa kosong", "Info");
+            $("#blokdatamahasiswa").html("");
+          }
+        });
+      }
+
+      const keloladataapi = (el) => {
+        let nim = $(el).data("nim");
+        // console.log(nim);
+        if (nim == "") {
+          app.dialog.alert("NIM tidak ada", "Error");
+          return;
+        }
+        app.views.main.router.navigate("/dataapikelola/");
+        app.dialog.progress("Filter Data...");
+        let url = "https://miftahuda123.000webhostapp.com/api_native2/api.php";
+        $.getJSON(url, { fungsi: "filterdata", nim: nim }, (result) => {
+          app.dialog.close();
+          if (result != 0) {
+            let kelas = "";
+            $.each(result, (i, data) => {
+              let nama = data.nama;
+              let email = data.email;
+              kelas = data.kelas;
+              $("#txtnime").val(nim);
+              $("#txtnamae").val(nama);
+              $("#txtemaile").val(email);
+              $("#txtkelase").val(kelas);
+            });
+            $(".btnkelas").removeClass("button-active");
+            if (kelas == "Reguler") {
+              $("#btnegulere").removeClass("button-active");
+            } else if (kelas == "Ekstensi") {
+              $("#btnekstensie").removeClass("button-active");
+            } else {
+              $("#btnrple").removeClass("button-active");
+            }
+          } else {
+            app.dialog.alert("Data tidak ditemukan", "Info");
+            () => {
+              app.views.main.router.back();
+            };
+          }
+        });
+      };
+
+      const setkelas = (id, nilai, tombol, tujuan) => {
+        $(tujuan).val(nilai);
+        $(tombol).removeClass("button-active");
+        $(id).addClass("button-active");
+        // console.log("kelas");
+      };
+
+      const tambahDataApi = () => {
+        let nim = $("#txtnim").val();
+        let nama = $("#txtnama").val();
+        let email = $("#txtemail").val();
+        let kelas = $("#txtkelas").val();
+
+        if (nim == "" || nama == "" || email == "" || kelas == "") {
+          app.dialog.alert("Isian masih kosong!", "Error");
+          return;
+        }
+
+        $.ajax({
+          url: "https://miftahuda123.000webhostapp.com/api_native2/api.php",
+          method: "POST",
+          data: { fungsi: "tambahdata", nim: nim, nama: nama, email: email, kelas: kelas },
+          cache: "false",
+          success: (data) => {
+            console.log(data);
+            var x = atob(data);
+            var xx = x.split("|");
+            if (xx[0] == "1") {
+              app.dialog.alert(xx[1], "Berhasil");
+              kosongForm();
+            } else {
+              app.dialog.alert(xx[1], "Gagal");
+            }
+          },
+          error: () => {
+            app.dialog.alert("Tidak terhubung API,gagal!", "Error");
+          },
+        });
+      };
+
+      let updateDataApi = () => {
+        let nim = $("#txtnime").val();
+        let nama = $("#txtnamae").val();
+        let email = $("#txtemaile").val();
+        let kelas = $("#txtkelase").val();
+
+        if (nim == "" || nama == "" || email == "" || kelas == "") {
+          app.dialog.alert("Isian masih kosong!", "Error");
+          return;
+        }
+        $.ajax({
+          url: "https://miftahuda123.000webhostapp.com/api_native2/api.php",
+          method: "PUT",
+          data: { fungsi: "updatedata", nama: nama, email: email, kelas: kelas },
+          chache: "false",
+          success: (data) => {
+            var x = atob(data);
+            // console.log(data);
+            var xx = x.split("|");
+            if (xx[0] == "1") {
+              app.dialog.alert(xx[1], "Berhasil");
+              app.views.main.router.back();
+            } else {
+              app.dialog.alert(xx[1], "Gagal");
+            }
+          },
+          error: () => {
+            app.dialog.alert("Koneksi API gagal", "Error");
+          },
+        });
+      };
+
+      const hapusDataApi = () => {
+        let nim = $("#txtnime").val();
+        console.log(nim);
+        if (nim == "") {
+          app.dialog.alert("Isian masih kosong!", "Error");
+        }
+
+        app.dialog.confirm("Anda ingin menghapus?", "konfirmasi", () => {
+          $.ajax({
+            url: "https://miftahuda123.000webhostapp.com/api_native2/api.php",
+            method: "POST",
+            data: { fungsi: "hapusdata", nim: nim },
+            chache: "false",
+            success: (data) => {
+              var x = atob(data);
+              var xx = x.split("|");
+              if (xx[0] == "1") {
+                app.dialog.alert(xx[1], "Berhasil", () => {
+                  app.views.main.router.back();
+                });
+              } else {
+                app.dialog.alert(xx[1], "Gagal");
+              }
+            },
+            error: () => {
+              app.dialog.alert("Koneksi api gagal", "Error");
+            },
+          });
+        });
+      };
+
+      const kosongForm = () => {
+        let nim = $("#txtnim").val("");
+        let nama = $("#txtnama").val("");
+        let email = $("#txtemail").val("");
+        let kelas = $("#txtkelas").val("");
+        $(".btnkelas").removeClass("button.active");
+      };
       konfigurasidb();
       scannerku();
       loginku();
